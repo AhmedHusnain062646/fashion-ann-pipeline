@@ -8,18 +8,31 @@ with open("params.yaml") as f:
 
 data = np.load("data/raw/fashion_mnist.npz")
 
-# --- normalization ---
-# main: per-image min-max scaling to [0, 1]
+
 def per_image_minmax(a):
+    # main's approach: scale each image to [0, 1] using its own min/max
     a = a.astype("float32")
     lo = a.min(axis=(1, 2), keepdims=True)
     hi = a.max(axis=(1, 2), keepdims=True)
     return (a - lo) / (hi - lo + 1e-7)
 
 
-x_train_full = per_image_minmax(data["x_train"])
-x_test = per_image_minmax(data["x_test"])
-# --- end normalization ---
+def standardize(train, test):
+    # teammate's approach: zero mean / unit variance using train statistics
+    train = train.astype("float32")
+    test = test.astype("float32")
+    mean, std = train.mean(), train.std()
+    return (train - mean) / std, (test - mean) / std
+
+
+method = params["normalization"]
+if method == "per_image_minmax":
+    x_train_full = per_image_minmax(data["x_train"])
+    x_test = per_image_minmax(data["x_test"])
+elif method == "standardize":
+    x_train_full, x_test = standardize(data["x_train"], data["x_test"])
+else:
+    raise ValueError(f"Unknown normalization: {method}")
 
 y_train_full = data["y_train"]
 y_test = data["y_test"]
@@ -43,6 +56,7 @@ np.savez_compressed(
     y_test=y_test,
 )
 
+print("Normalization:", method)
 print("Saved processed data to data/processed/data.npz")
 print("train:", x_train.shape, "val:", x_val.shape, "test:", x_test.shape)
 print("pixel range:", float(x_train.min()), "to", float(x_train.max()))
