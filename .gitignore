@@ -1,11 +1,4 @@
-manual/
-Fashion.md
 venv/
-.venv/
 __pycache__/
-*.pyc
-.vscode/
-.dvc/cache
-.dvc/tmp
-.dvc/config.local
+.dvc/cache/
 *.h5
