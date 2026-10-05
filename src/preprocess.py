@@ -11,3 +11,4 @@ x_tr, x_val, y_tr, y_val = train_test_split(
 os.makedirs("data/processed", exist_ok=True)
 np.savez_compressed("data/processed/data.npz", x_train=x_tr, y_train=y_tr,
                     x_val=x_val, y_val=y_val, x_test=x_test, y_test=d["y_test"])
+# Normalize pixels to [0, 1]
