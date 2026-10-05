@@ -1,4 +1,4 @@
-# Fashion-MNIST ANN Pipeline
+# Fashion-MNIST ANN ML Pipeline
 
 End-to-end machine learning pipeline using:
 
